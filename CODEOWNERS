@@ -2,7 +2,7 @@
 
 # Ownership for the Inference Package
 # packages/inference @huggingface/hf-js-inference
-/packages/inference/ @kohsheen1234
+/packages/inference/ @kohsheentiku
 # Ownership for the Tasks Package
 # /packages/tasks/ @huggingface/hf-js-tasks
 
