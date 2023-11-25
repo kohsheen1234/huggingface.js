@@ -3,8 +3,9 @@
 # Ownership for the Inference Package
 # packages/inference @huggingface/hf-js-inference
 /packages/inference/ @kohsheentiku
+
 # Ownership for the Tasks Package
-# /packages/tasks/ @huggingface/hf-js-tasks
+/packages/tasks/ @kohsheentiku
 
 # Ownership for the Widgets Package
 # /packages/widgets/ @huggingface/hf-js-widgets
