@@ -1,6 +1,7 @@
 # Internal package for doc generation
 
-# adding dummy test line
+# adding dummy test line - 1
+# adding dummy test line - 2
 
 This package generates `.md` files inside the [docs](../../docs) folder using [typedoc](https://typedoc.org/) and [typedoc-plugin-markdown](https://github.com/tgreyuk/typedoc-plugin-markdown).
 
