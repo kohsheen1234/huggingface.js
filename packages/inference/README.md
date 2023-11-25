@@ -3,6 +3,7 @@
 # testline-1 inference
 
 # testline-2 inference
+# testline-3 inference
 
 
 A Typescript powered wrapper for the Hugging Face Inference API. Learn more about the Inference API at [Hugging Face](https://huggingface.co/docs/api-inference/index). It also works with [Inference Endpoints](https://huggingface.co/docs/inference-endpoints/index).
