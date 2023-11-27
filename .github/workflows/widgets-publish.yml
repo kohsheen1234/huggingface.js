@@ -40,6 +40,12 @@ jobs:
       # Validate Task Package Integrity
       - name: Validate Task Package Integrity
         run: |
+          echo "Current Directory:"
+          pwd
+          echo "Listing Contents of Current Directory:"
+          ls -la
+          echo "Listing Contents of Parent Directory:"
+          ls -la ../
           echo "Calculating checksum of local @huggingface/tasks package..."
           LOCAL_CHECKSUM=$(tar -cf - ../tasks | sha256sum | cut -d' ' -f1)
           echo "Fetching remote @huggingface/tasks package..."
