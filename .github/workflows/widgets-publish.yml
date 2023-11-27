@@ -41,7 +41,7 @@ jobs:
       - name: Validate Task Package Integrity
         run: |
           echo "Calculating checksum of local @huggingface/tasks package..."
-          LOCAL_CHECKSUM=$(tar -cf - ../packages/tasks | sha256sum | cut -d' ' -f1)
+          LOCAL_CHECKSUM=$(tar -cf - ../tasks | sha256sum | cut -d' ' -f1)
           echo "Fetching remote @huggingface/tasks package..."
           npm pack @huggingface/tasks@$BUMPED_VERSION
           REMOTE_CHECKSUM=$(tar -xf huggingface-tasks-$BUMPED_VERSION.tgz -C /tmp && tar -cf - /tmp/package | sha256sum | cut -d' ' -f1)
