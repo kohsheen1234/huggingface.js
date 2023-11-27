@@ -49,6 +49,7 @@ jobs:
           echo "Calculating checksum of local @huggingface/tasks package..."
           LOCAL_CHECKSUM=$(cd ../tasks && tar -cf - . | sha256sum | cut -d' ' -f1)
           echo "Fetching remote @huggingface/tasks package..."
+          echo "Bumped Version: $BUMPED_VERSION"
           npm pack @huggingface/tasks@$BUMPED_VERSION
           REMOTE_CHECKSUM=$(tar -xf huggingface-tasks-$BUMPED_VERSION.tgz -C /tmp && tar -cf - /tmp/package | sha256sum | cut -d' ' -f1)
           if [ "$LOCAL_CHECKSUM" != "$REMOTE_CHECKSUM" ]; then
