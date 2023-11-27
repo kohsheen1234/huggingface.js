@@ -39,6 +39,14 @@ jobs:
           git tag "widgets-v$BUMPED_VERSION"
           echo "BUMPED_VERSION=$BUMPED_VERSION" >> $GITHUB_ENV
           echo "Bumped Version: $BUMPED_VERSION"
+
+      - name: Get Latest Published Version of @huggingface/tasks
+        run: |
+          echo "Fetching latest published version of @huggingface/tasks..."
+          LATEST_PUBLISHED_VERSION=$(npm view @huggingface/tasks version)
+          echo "Latest Published Version: $LATEST_PUBLISHED_VERSION"
+          echo "LATEST_PUBLISHED_VERSION=$LATEST_PUBLISHED_VERSION" >> $GITHUB_ENV
+
       - name: Calculate Local Package Checksum
         run: |
           echo "Calculating checksum of local @huggingface/tasks package..."
@@ -48,8 +56,8 @@ jobs:
       - name: Fetch and Calculate Remote Package Checksum
         run: |
           echo "Fetching remote @huggingface/tasks package..."
-          npm pack @huggingface/tasks@$BUMPED_VERSION
-          REMOTE_CHECKSUM=$(tar -xf huggingface-tasks-$BUMPED_VERSION.tgz -C /tmp && tar -cf - /tmp/package | sha256sum | cut -d' ' -f1)
+          npm pack @huggingface/tasks@$LATEST_PUBLISHED_VERSION
+          REMOTE_CHECKSUM=$(tar -xf huggingface-tasks-$LATEST_PUBLISHED_VERSION.tgz -C /tmp && tar -cf - /tmp/package | sha256sum | cut -d' ' -f1)
           echo "Remote package checksum: $REMOTE_CHECKSUM"
 
       - name: Compare Checksums and Validate
@@ -59,6 +67,7 @@ jobs:
             exit 1
           fi
           echo "Checksums match. Proceeding with the release."
+
       - run: pnpm publish --no-git-checks .
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
