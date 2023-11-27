@@ -40,37 +40,27 @@ jobs:
           echo "BUMPED_VERSION=$BUMPED_VERSION" >> $GITHUB_ENV
           echo "Bumped Version: $BUMPED_VERSION"
 
-      - name: Get Latest Published Version of @huggingface/tasks
-        run: |
-          echo "Fetching latest published version of @huggingface/tasks..."
-          LATEST_PUBLISHED_VERSION=$(npm view @huggingface/tasks version)
-          echo "Latest Published Version: $LATEST_PUBLISHED_VERSION"
-          echo "LATEST_PUBLISHED_VERSION=$LATEST_PUBLISHED_VERSION" >> $GITHUB_ENV
-
-      - name: Calculate Local Package Checksum
-        run: |
+      - run: |
           echo "Calculating checksum of local @huggingface/tasks package..."
           LOCAL_CHECKSUM=$(cd ../tasks && tar -cf - . | sha256sum | cut -d' ' -f1)
           echo "Local package checksum: $LOCAL_CHECKSUM"
 
-      - name: Fetch and Calculate Remote Package Checksum
-        run: |
-          echo "Fetching remote @huggingface/tasks package..."
+          echo "Fetching latest published version of @huggingface/tasks..."
+          LATEST_PUBLISHED_VERSION=$(npm view @huggingface/tasks version)
           npm pack @huggingface/tasks@$LATEST_PUBLISHED_VERSION
           REMOTE_CHECKSUM=$(tar -xf huggingface-tasks-$LATEST_PUBLISHED_VERSION.tgz -C /tmp && tar -cf - /tmp/package | sha256sum | cut -d' ' -f1)
           echo "Remote package checksum: $REMOTE_CHECKSUM"
 
-      - name: Compare Checksums and Validate
-        run: |
           if [ "$LOCAL_CHECKSUM" != "$REMOTE_CHECKSUM" ]; then
             echo "Error: Checksums do not match! Local: $LOCAL_CHECKSUM, Remote: $REMOTE_CHECKSUM"
             exit 1
           fi
-          echo "Checksums match. Proceeding with the release.  Local: $LOCAL_CHECKSUM, Remote: $REMOTE_CHECKSUM"
+          echo "Checksums match. Proceeding with the release. Local: $LOCAL_CHECKSUM, Remote: $REMOTE_CHECKSUM"
 
       - run: pnpm publish --no-git-checks .
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - run: git push --follow-tags
       # hack - reuse actions/setup-node@v3 just to set a new registry
       - uses: actions/setup-node@v3
