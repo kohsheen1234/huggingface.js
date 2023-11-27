@@ -37,6 +37,7 @@ jobs:
           node -e "const fs = require('fs'); const package = JSON.parse(fs.readFileSync('./package.json')); package.version = '$BUMPED_VERSION'; fs.writeFileSync('./package.json', JSON.stringify(package, null, '\t') + '\n');"
           git commit . -m "🔖 @huggingface/widgets $BUMPED_VERSION"
           git tag "widgets-v$BUMPED_VERSION"
+          echo "BUMPED_VERSION=$BUMPED_VERSION" >> $GITHUB_ENV
           echo "Bumped Version: $BUMPED_VERSION"
       # Validate Task Package Integrity
       - name: Validate Task Package Integrity
@@ -50,8 +51,6 @@ jobs:
           echo "Calculating checksum of local @huggingface/tasks package..."
           LOCAL_CHECKSUM=$(cd ../tasks && tar -cf - . | sha256sum | cut -d' ' -f1)
           echo "Fetching remote @huggingface/tasks package..."
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          BUMPED_VERSION=$(node -p "require('semver').inc('$PACKAGE_VERSION', '${{ github.event.inputs.newversion }}')")
           echo "Bumped Version: $BUMPED_VERSION"
           npm pack @huggingface/tasks@$BUMPED_VERSION
           REMOTE_CHECKSUM=$(tar -xf huggingface-tasks-$BUMPED_VERSION.tgz -C /tmp && tar -cf - /tmp/package | sha256sum | cut -d' ' -f1)
