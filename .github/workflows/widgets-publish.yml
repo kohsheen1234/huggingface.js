@@ -39,23 +39,23 @@ jobs:
           git tag "widgets-v$BUMPED_VERSION"
           echo "BUMPED_VERSION=$BUMPED_VERSION" >> $GITHUB_ENV
           echo "Bumped Version: $BUMPED_VERSION"
-      # Validate Task Package Integrity
-      - name: Validate Task Package Integrity
+      - name: Calculate Local Package Checksum
         run: |
-          echo "Current Directory:"
-          pwd
-          echo "Listing Contents of Current Directory:"
-          ls -la
-          echo "Listing Contents of Parent Directory:"
-          ls -la ../
           echo "Calculating checksum of local @huggingface/tasks package..."
           LOCAL_CHECKSUM=$(cd ../tasks && tar -cf - . | sha256sum | cut -d' ' -f1)
+          echo "Local package checksum: $LOCAL_CHECKSUM"
+
+      - name: Fetch and Calculate Remote Package Checksum
+        run: |
           echo "Fetching remote @huggingface/tasks package..."
-          echo "Bumped Version: $BUMPED_VERSION"
           npm pack @huggingface/tasks@$BUMPED_VERSION
           REMOTE_CHECKSUM=$(tar -xf huggingface-tasks-$BUMPED_VERSION.tgz -C /tmp && tar -cf - /tmp/package | sha256sum | cut -d' ' -f1)
+          echo "Remote package checksum: $REMOTE_CHECKSUM"
+
+      - name: Compare Checksums and Validate
+        run: |
           if [ "$LOCAL_CHECKSUM" != "$REMOTE_CHECKSUM" ]; then
-            echo "Checksums do not match! Local: $LOCAL_CHECKSUM, Remote: $REMOTE_CHECKSUM"
+            echo "Error: Checksums do not match! Local: $LOCAL_CHECKSUM, Remote: $REMOTE_CHECKSUM"
             exit 1
           fi
           echo "Checksums match. Proceeding with the release."
