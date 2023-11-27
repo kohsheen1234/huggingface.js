@@ -37,6 +37,7 @@ jobs:
           node -e "const fs = require('fs'); const package = JSON.parse(fs.readFileSync('./package.json')); package.version = '$BUMPED_VERSION'; fs.writeFileSync('./package.json', JSON.stringify(package, null, '\t') + '\n');"
           git commit . -m "🔖 @huggingface/widgets $BUMPED_VERSION"
           git tag "widgets-v$BUMPED_VERSION"
+          echo "Bumped Version: $BUMPED_VERSION"
       # Validate Task Package Integrity
       - name: Validate Task Package Integrity
         run: |
