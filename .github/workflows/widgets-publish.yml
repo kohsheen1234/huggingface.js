@@ -60,6 +60,11 @@ jobs:
             echo "Error: Failed to download @huggingface/tasks@$LATEST_PUBLISHED_VERSION"
             exit 1
           fi
+
+          # Extract and remove dist and node_modules directories before checksum calculation
+          tar -xf huggingface-tasks-$LATEST_PUBLISHED_VERSION.tgz -C /tmp
+          rm -rf /tmp/package/dist /tmp/package/node_modules
+
           REMOTE_CHECKSUM=$(tar -xf huggingface-tasks-$LATEST_PUBLISHED_VERSION.tgz -C /tmp && tar -cf - /tmp/package | sha256sum | cut -d' ' -f1)
           echo "Remote package checksum: $REMOTE_CHECKSUM"
 
