@@ -63,9 +63,9 @@ jobs:
 
           # Extract and remove dist and node_modules directories before checksum calculation
           tar -xf huggingface-tasks-$LATEST_PUBLISHED_VERSION.tgz -C /tmp
-          rm -rf /tmp/package/dist /tmp/package/node_modules
+          rm -rf /tmp/dist /tmp/node_modules
 
-          REMOTE_CHECKSUM=$(tar -xf huggingface-tasks-$LATEST_PUBLISHED_VERSION.tgz -C /tmp && tar -cf - /tmp/package | sha256sum | cut -d' ' -f1)
+          REMOTE_CHECKSUM=$(cd /tmp && tar --mtime='1970-01-01' --mode=755 -cf - . | sha256sum | cut -d' ' -f1)
           echo "Remote package checksum: $REMOTE_CHECKSUM"
 
           if [ "$LOCAL_CHECKSUM" != "$REMOTE_CHECKSUM" ]; then
